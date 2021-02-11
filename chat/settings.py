@@ -1,6 +1,7 @@
 # chat/settings.py
 """Base Settings."""
 import os
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from os.path import join
 
@@ -26,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Apps
-    'core',
+    'core.apps.CoreConfig',
     # 3rd party
     'rest_framework',
     'channels',
@@ -84,11 +85,11 @@ ASGI_APPLICATION = 'chat.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DJANGO_DB_NAME', 'v2_bokshi'),
-        'USER': os.environ.get('DJANGO_DB_USER', 'root'),
-        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', ''),
-        'HOST': os.environ.get('DJANGO_DB_HOST', '127.0.0.1'),
-        'PORT': os.environ.get('DJAGNO_DB_PORT', '3306'),
+        'NAME': os.environ.get('DJANGO_DB_NAME_DEV', 'v2_bokshi'),
+        'USER': os.environ.get('DJANGO_DB_USER_DEV', 'root'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD_DEV', ''),
+        'HOST': os.environ.get('DJANGO_DB_HOST_DEV', '127.0.0.1'),
+        'PORT': os.environ.get('DJAGNO_DB_PORT_DEV', '3306'),
     }
 }
 # Password validation
@@ -197,6 +198,6 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_WHITELIST = (
-'http://localhost:3000',
-'http://localhost:8000',
+    'http://localhost:3000',
+    'http://localhost:8000',
 )
