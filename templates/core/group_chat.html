@@ -1,0 +1,112 @@
+<!-- core/group_chat.html -->
+<!-- {% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Welcome to Bokshi Chat
+                <small>Pick a user and start chatting!</small>
+            </h1>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="group-list" class="list-group">
+                    <a href="" class="list-group-item disabled">
+                        <h4 class="list-group-item-heading">Groups<h4>
+                    </a>
+                        {# Groups go here #}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-9 col-sm-12">
+                                <h4 class="panel-title"><span>Chat</span></h4>
+                            </div>
+                            <div class="col-md-3 col-sm-12">
+                                <a href="" class="btn btn-primary " style="float: right;">Create Group</a>
+                            </div>
+
+                         </div>
+                    </div>
+                    <div>
+                        <ul id="messages" class="messages">
+                            {# Messages go here #}
+                        </ul>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="input-group">
+                            <input id="chat-input" type="text"
+                                   class="form-control input"
+                                   placeholder="Type your message here ..."
+                                   maxlength="500">
+                            <span class="input-group-btn">
+                                <button class="btn btn-info btn" id="btn-send">Send</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionKey = '{{ request.session.session_key }}';
+        let currentUser = '{{ request.user.username }}';
+    </script>
+    <script src="{% static 'js/group_app.js' %}"></script>
+
+{% endblock %} -->
+<!-- chat/templates/chat/room.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Room</title>
+</head>
+<body>
+    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+    <input id="chat-message-input" type="text" size="100"><br>
+    <input id="chat-message-submit" type="button" value="Send">
+    {{ room_name|json_script:"room-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#chat-log').value += (data.message + '\n');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        };
+    </script>
+</body>
+</html>
